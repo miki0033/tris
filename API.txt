@@ -3,6 +3,15 @@ def __init__():
 #Inizializza la stanza 
 return redirect('/codiece_stanza/n_utente')
 
+@app.route('/join/codice_stanza', methods = ['GET'])
+def join():
+#Fa in modo di entrare in una stanza già esistente
+#controllo sul numero di utenti nella stanza 
+#<2 accedi alla stanza come giocatore
+#>2 accedi alla stanza come spettatore
+return redirect('/codiece_stanza/n_utente')
+
+  
 @app.route('/codice_stanza/n_utente', methods = ['POST'])
 def mossa():
 #controlla la mossa effettuata
