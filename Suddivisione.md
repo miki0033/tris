@@ -1,15 +1,15 @@
-#Suddivisione compiti:
+# Suddivisione compiti:
 []
 []
-#Michele
+# Michele
 []
 []
-#Danilo
+# Danilo
 []
 []
-#Claudia
+# Claudia
 []
 []
-#Cosimo
+# Cosimo
 []
 []
