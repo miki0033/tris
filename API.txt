@@ -1,0 +1,14 @@
+@app.route('/new_room', methods = ['GET'])
+def __init__():
+#Inizializza la stanza 
+return redirect('/codiece_stanza/n_utente')
+
+@app.route('/codice_stanza/n_utente', methods = ['POST'])
+def mossa():
+#controlla la mossa effettuata
+#salva la mossa se è valida
+#scambia la variabile del turno
+
+@app.route('/codice_stanza', methods = ['GET'])
+def getStatus:
+#Ritorna un array con lo stato della partita(casselle occupate, di chi è il turno)
