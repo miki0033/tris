@@ -1,0 +1,126 @@
+/* ###   ### */
+:root {
+    --primary: rgb(0, 0, 200);
+    --secondary: rgb(80, 220, 255);
+    --tertiary: rgb(0, 0, 0);
+    --quaternary: rgb(245, 245, 245);
+
+    --bg-white: rgb(255,255,255);
+
+    --shadow-1: 1px 1px 5px var(--secondary);
+    --shadow-2: 1px 1px 5px var(--tertiary);
+
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-white);
+}
+
+/* Top */
+header {
+    margin: 2px;
+    border: 2px solid blue;
+    border-image: linear-gradient(175deg, var(--primary), var(--secondary)) 1;
+}
+
+h1 {
+    margin: 0;
+    padding-top: 1rem;
+
+    text-align: center;
+    font-size: 40px;
+    color: var(--tertiary);
+    text-shadow: var(--shadow-1);
+}
+
+#user {
+    text-align: right;
+
+    margin: 0;
+    margin-right: 3rem;
+}
+
+
+#user button {
+    margin-bottom: 1rem;
+
+    font-size: 17px;
+    border: 2px solid;
+    border-image: linear-gradient(175deg, var(--primary), var(--secondary)) 1;
+    color: var(--tertiary);
+    text-shadow: var(--shadow-1);
+}
+
+#user button:hover {
+    cursor: pointer;
+}
+
+#user button:active {
+    border: 2px solid;
+    border-image: linear-gradient(175deg, var(--secondary) ,var(--primary)) 1;
+    color: var(--primary);
+    text-shadow: var(--shadow-2);
+}
+
+
+
+/* ###   ### */
+main {
+    margin: 2px;
+    margin-top: 2rem;
+    border: 2px solid blue;
+    border-image: linear-gradient(175deg, var(--tertiary), var(--quaternary)) 1;
+
+    height: 40rem;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+main button {
+    margin: auto;
+
+    font-size: 20px;
+    background-color: var(--bg-white);
+
+    border: 2px solid;
+    border-image: linear-gradient(180deg, var(--tertiary), var(--quaternary)) 1;
+    color: var(--tertiary);
+}
+
+main button:hover {
+    cursor: pointer;
+}
+
+main button:active {
+    border: 2px solid;
+    border-image: linear-gradient(175deg, var(--quaternary) ,var(--tertiary)) 1;
+    color: var(--tertiary);
+}
+
+main div {
+    height: 35rem;
+    width: 35rem;
+    
+    margin: auto 5% auto 5%;
+
+    border: 2px solid;
+    border-image: linear-gradient(180deg, var(--tertiary), var(--quaternary)) 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+
+
+
