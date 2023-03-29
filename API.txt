@@ -9,7 +9,7 @@ def join():
 #controllo sul numero di utenti nella stanza 
 #<2 accedi alla stanza come giocatore
 #>2 accedi alla stanza come spettatore
-return redirect('/codiece_stanza/n_utente')
+return redirect('/codice_stanza/n_utente')
 
   
 @app.route('/codice_stanza/n_utente', methods = ['POST'])
