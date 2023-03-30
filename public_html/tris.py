@@ -1,6 +1,6 @@
 # -----------import Lib-----------
 import os
-from public_html.tris_lib import trislib
+from tris_lib import trislib
 import classi
 # -----------import Flask Lib-----------
 from flask import Flask
@@ -36,7 +36,7 @@ def __init__():
     return redirect(f'/{codiceStanza}/{username}')
 
 
-@app.route('/join/<str:codiceStanza>', methods=['GET'])
+@app.route('/join/<string:codiceStanza>', methods=['GET'])
 def join():
     # Fa in modo di entrare in una stanza già esistente
     # controllo sul numero di utenti nella stanza
@@ -53,7 +53,7 @@ def mossa():
     return
 
 
-@app.route('/<str:codiceStanza>', methods=['GET'])
+@app.route('/<string:codiceStanza>', methods=['GET'])
 def getStatus():
     # Ritorna un array JSON con lo stato della partita(casselle occupate, di chi è il turno)
     # Richimare tramite Javascript

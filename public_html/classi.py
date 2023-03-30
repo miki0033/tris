@@ -4,7 +4,7 @@ import time
 
 from datetime import datetime, timedelta
 
-from public_html.tris_lib import trislib
+from tris_lib import trislib
 # -----GLOBALI------
 active = []  # array di oggetti TrisRoom
 # -----Classi-------
