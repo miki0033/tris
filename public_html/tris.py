@@ -55,7 +55,8 @@ def mossa():
 
 @app.route('/<str:codiceStanza>', methods=['GET'])
 def getStatus():
-    # Ritorna un array con lo stato della partita(casselle occupate, di chi è il turno)
+    # Ritorna un array JSON con lo stato della partita(casselle occupate, di chi è il turno)
+    # Richimare tramite Javascript
 
     return
 
