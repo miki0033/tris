@@ -3,6 +3,7 @@ import random
 from datetime import datetime, timedelta
 
 from tris_lib import trislib
+import uuid
 # -----GLOBALI------
 
 # -----Classi-------
@@ -30,12 +31,12 @@ class TrisRoom:
 
     @staticmethod
     def createCode():
-        # idea:generare un codice tramite conversione in alfanumerico di un numero random/ o del timestamp
+        # genera un codice tramite uuid
         flag = True  # true fin quando il codice non è valido
         while (flag):
-            rnd = random.randrange(100000, 1000000)
+            room_id = str(uuid.uuid4().hex)[:6]
             # check sui dati in tabella activeRoom
-            flag = ActiveRooms.checkCode(rnd)
+            flag = ActiveRooms.checkCode(room_id)
 
     def getRoomCode(self):
         return self.codiceStanza
@@ -67,7 +68,7 @@ class ActiveRooms:
     def checkCode(code):
         # restituisce true se il codice è presente un tabella
         # false altrimenti
-        result = False  # PROVVISORIO
+        result = False  
 
         for i in ActiveRooms.active:
             if ActiveRooms.active[i].codiceStanza == code:
