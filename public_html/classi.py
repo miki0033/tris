@@ -3,6 +3,8 @@ import random
 from datetime import datetime, timedelta
 
 from tris_lib import trislib
+import uuid
+
 # -----GLOBALI------
 
 # -----Classi-------
@@ -15,34 +17,57 @@ class TrisRoom:
     timestamp = 0
     timeout_time = 0
     """
-    giocatori = []
+    # giocatori = []
+    host = ""
+    guest = ""
     spettatori = []
-
+    mosse = {
+        "turn": "host",
+        "NO": "",
+        "N": "",
+        "NE": "",
+        "O": "",
+        "C": "",
+        "E": "",
+        "SO": "",
+        "S": "",
+        "SE": "",
+    }
     # Metodi
 
     def __init__(self, host):
-        self.giocatori.push(host)
+        self.host = host
         self.timestamp = datetime.now()
         self.timeout_time = timedelta(hours=1)
-        self.codiceStanza = self.createCode()
+        self.codiceStanza = TrisRoom.createCode()
 
         ActiveRooms.pushRoom(self)
 
     @staticmethod
     def createCode():
-        # idea:generare un codice tramite conversione in alfanumerico di un numero random/ o del timestamp
+        # genera un codice tramite uuid
         flag = True  # true fin quando il codice non è valido
-        while (flag):
-            rnd = random.randrange(100000, 1000000)
+        while flag:
+            room_id = str(uuid.uuid4().hex)[:6]
             # check sui dati in tabella activeRoom
-            flag = ActiveRooms.checkCode(rnd)
+            flag = ActiveRooms.checkCode(room_id)
+        return room_id
 
     def getRoomCode(self):
         return self.codiceStanza
 
+    def joinRoom(self, username):
+        if not self.guest:
+            self.guest = username
+        else:
+            self.spettatori.append(username)
+
+    def getMove(self):
+        return self.mosse
+
     def timeout(self):
         # restituisce true se è passato il tempo di timeout
-        if (datetime.now() > self.timestamp+self.timeout_time):
+        if datetime.now() > self.timestamp + self.timeout_time:
             return True
         else:
             return False
@@ -56,21 +81,26 @@ class ActiveRooms:
         return self.active
 
     def pushRoom(pointer):
-        ActiveRooms.active.push(pointer)
+        ActiveRooms.active.append(pointer)
 
     def RoomTimeout(self):
         for i in self.active:
-            if self.active[i].timeout():
+            if TrisRoom.timeout(i):
                 self.active.pop(i)
+
+    @staticmethod
+    def getRoom(code):
+        for room in ActiveRooms.getActiveRooms():
+            if room.codiceStanza == code:
+                p = room
+        return p
 
     @staticmethod
     def checkCode(code):
         # restituisce true se il codice è presente un tabella
         # false altrimenti
-        result = False  # PROVVISORIO
-
-        for i in ActiveRooms.active:
-            if ActiveRooms.active[i].codiceStanza == code:
+        result = False
+        for room in ActiveRooms.active:
+            if room.codiceStanza == code:
                 result = True
-
         return result
