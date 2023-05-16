@@ -12,17 +12,19 @@ p_table[6] = document.querySelector(".SO");
 p_table[7] = document.querySelector(".S");
 p_table[8] = document.querySelector(".SE");
 
-room_code = document.getElementById("codiceStanza");
-p_par = document.querySelector("p");
+room_code = document.getElementById("codiceStanza").textContent;
+username = document.getElementById("username").textContent;
+avatar = document.getElementById("avatar").textContent;
+p_par = document.querySelector(".p_message");
 
 console.log({ p_table });
 console.log({ room_code });
 ///////////////////VARIABILI//////////////////
 const tris = ["", "", "", "", "", "", "", "", ""];
-let turn = ""; // può essere host o guest
+let turn = ""; // può essere host=X o guest=O
 
 async function buildTable() {
-  table = await getMove(room_code.innerText);
+  table = await getMove(room_code);
   tris[0] = table["NO"];
   tris[1] = table["N"];
   tris[2] = table["NE"];
@@ -46,22 +48,37 @@ function printTable() {
   p_table[6].textContent = tris[6];
   p_table[7].textContent = tris[7];
   p_table[8].textContent = tris[8];
+
+  for (let i = 0; i < p_table.length; i++) {
+    if (p_table[i].textContent != avatar) {
+      p_table[i].style.color = "red";
+    }
+  }
+}
+function changeTurn() {
+  console.log("turno:", turn);
+  if (turn == "X") {
+    turn = "O";
+  } else if (turn == "O") {
+    turn = "X";
+  }
 }
 
 const gameTris = (event) => {
   //TODO:
   //DA MODIFICARE: in modo che una vola che l'utente immette un input controlla che sia il suo turno
   //e poi invii l'oggetto tris all' api
-
-  if (event.target.textContent === "") {
-    event.target.textContent = charPlayer;
+  console.log(avatar);
+  if (event.target.textContent === "" && turn == avatar) {
+    event.target.textContent = avatar;
     event.target.style.color = "blue";
     id = event.target.id;
-    tris[id] = charPlayer;
-    buildTable();
+    tris[id] = avatar;
     //TODO: ricontrollare parametri postMOve
     //ricontrollare gameTris
-    //postMove(mossa, room_code.textContent, username.textContent);
+    postMove(tris, room_code, username);
+    changeTurn();
+    buildTable();
   }
 };
 
@@ -90,7 +107,7 @@ async function getMove(codiceStanza) {
 
 ///////////////////MAIN//////////////////////
 buildTable();
-console.log(room_code.innerText);
+
 ///////////////////eventlistener/////////////
 document.addEventListener("click", gameTris);
 

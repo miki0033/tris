@@ -22,7 +22,7 @@ class TrisRoom:
     guest = ""
     spettatori = []
     mosse = {
-        "turn": "host",
+        "turn": "X",
         "NO": "",
         "N": "",
         "NE": "",
@@ -31,7 +31,7 @@ class TrisRoom:
         "E": "",
         "SO": "",
         "S": "",
-        "SE": "O",
+        "SE": "",
     }
     # Metodi
 
@@ -59,14 +59,41 @@ class TrisRoom:
     def joinRoom(self, username):
         if not self.guest:
             self.guest = username
+            result = "guest"
         else:
             self.spettatori.append(username)
+            result = "spectator"
+        return result
+
+    def assignedRole(self, username):
+        if self.host == username:
+            result = "host"
+        elif self.guest == username:
+            result = "guest"
+        else:
+            for user in self.spettatori:
+                if user == username:
+                    result = "spectator"
+                else:
+                    result = "error"
+        return result
 
     def getMove(self):
         return self.mosse
 
     def setMove(self, mossa):
-        self.mosse = mossa
+        if self.mosse["turn"] == "X":
+            self.mosse["turn"] = "O"
+        else:
+            self.mosse["turn"] = "X"
+        self.mosse["NO"] = mossa[0]
+        self.mosse["N"] = mossa[2]
+        self.mosse["O"] = mossa[3]
+        self.mosse["C"] = mossa[4]
+        self.mosse["E"] = mossa[5]
+        self.mosse["SO"] = mossa[6]
+        self.mosse["S"] = mossa[7]
+        self.mosse["SE"] = mossa[8]
 
     def timeout(self):
         # restituisce true se è passato il tempo di timeout

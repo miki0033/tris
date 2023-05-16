@@ -143,7 +143,6 @@ def __init__():
     room = classi.TrisRoom(username)
     codiceStanza = room.getRoomCode()
     trislib.printTerminal(codiceStanza)  # NONE
-    avatar = "X"
     return redirect(f"/{codiceStanza}/{username}")
 
 
@@ -158,22 +157,27 @@ def join():
 
     codiceStanza = request.form["join"]
     if classi.ActiveRooms.checkCode(codiceStanza):
-        p_room = classi.ActiveRooms.getRoom()
-        classi.TrisRoom.joinRoom(
-            p_room, username
-        )  # controllo sul numero di utenti nella stanza
-
-        for i in p_room.giocatori:
-            trislib.printTerminal(i)
-    return redirect(f"/{codiceStanza}/{username}", avatar="O")
+        p_room = classi.ActiveRooms.getRoom(codiceStanza)
+        p_room.joinRoom(username)  # controllo sul numero di utenti nella stanza
+        trislib.printTerminal(f"{p_room.host, p_room.guest}")
+    return redirect(f"/{codiceStanza}/{username}")  # avatar="O"
 
 
 @app.route("/<string:codiceStanza>/<string:username>", methods=["GET", "POST"])
 def tris(codiceStanza, username):
-    # controlla la mossa effettuata
-    # salva la mossa se è valida
-    # scambia la variabile del turno
-    return render_template("tris.html", codiceStanza=codiceStanza, username=username)
+    if classi.ActiveRooms.checkCode(codiceStanza):
+        p_room = classi.ActiveRooms.getRoom(codiceStanza)
+        avatar = p_room.assignedRole(username)
+
+        if avatar == "host":
+            avatar = "X"
+        elif avatar == "guest":
+            avatar = "O"
+        else:
+            avatar = ""
+    return render_template(
+        "tris.html", codiceStanza=codiceStanza, username=username, avatar=avatar
+    )
 
 
 @app.route("/tris/<string:codiceStanza>", methods=["GET"])
@@ -196,16 +200,20 @@ def getStatus(codiceStanza):
     return response
 
 
-@app.route("/mossa/<string:codiceStanza>/<string:username>", methods=["GET"])
-def setStatus(codiceStanza):
+@app.route("/mossa/<string:codiceStanza>/<string:username>", methods=["GET", "POST"])
+def setStatus(codiceStanza, username):
     # Ritorna un array JSON con lo stato della partita(casselle occupate, di chi è il turno)
     # Richimare tramite Javascript
     if request.method == "POST":
         mossa = request.json
-    if classi.ActiveRooms.checkCode(codiceStanza):
-        p_room = classi.ActiveRooms.getRoom(codiceStanza)
-        p_room.setMove(mossa)
-    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
+        if classi.ActiveRooms.checkCode(codiceStanza):
+            p_room = classi.ActiveRooms.getRoom(codiceStanza)
+            p_room.setMove(mossa)
+            return (
+                json.dumps({"success": True}),
+                200,
+                {"ContentType": "application/json"},
+            )
 
 
 # ---------FUNCIONS------------
