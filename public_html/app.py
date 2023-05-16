@@ -115,7 +115,6 @@ def login():
         account = cursor.fetchone()
         if account:
             session["loggedin"] = True
-            session["id"] = account["id"]
             session["username"] = account["username"]
 
             msg = "Logged in successfully !"
@@ -128,7 +127,6 @@ def login():
 @app.route("/logout")
 def logout():
     session.pop("loggedin", None)
-    session.pop("id", None)
     session.pop("username", None)
     return redirect(url_for("login"))
 
@@ -144,8 +142,9 @@ def __init__():
         session["username"] = username
     room = classi.TrisRoom(username)
     codiceStanza = room.getRoomCode()
-
-    return redirect(f"/{codiceStanza}/{username}", avatar="X")
+    trislib.printTerminal(codiceStanza)  # NONE
+    avatar = "X"
+    return redirect(f"/{codiceStanza}/{username}")
 
 
 @app.route("/join", methods=["GET", "POST"])
@@ -177,19 +176,21 @@ def tris(codiceStanza, username):
     return render_template("tris.html", codiceStanza=codiceStanza, username=username)
 
 
-@app.route("/<string:codiceStanza>", methods=["GET"])
+@app.route("/tris/<string:codiceStanza>", methods=["GET"])
 def getStatus(codiceStanza):
     # Ritorna un array JSON con lo stato della partita(casselle occupate, di chi è il turno)
     # Richimare tramite Javascript
+
     if classi.ActiveRooms.checkCode(codiceStanza):
-        p_room = classi.ActiveRooms.getRoom()
+        p_room = classi.ActiveRooms.getRoom(codiceStanza)
         mossa = classi.TrisRoom.getMove(p_room)
+        trislib.printTerminal(mossa)
         response = app.response_class(
             response=json.dumps(mossa), status=200, mimetype="application/json"
         )
     else:
         response = app.response_class(
-            response=json.dumps(), status=404, mimetype="application/json"
+            response="", status=404, mimetype="application/json"
         )
 
     return response
@@ -199,8 +200,12 @@ def getStatus(codiceStanza):
 def setStatus(codiceStanza):
     # Ritorna un array JSON con lo stato della partita(casselle occupate, di chi è il turno)
     # Richimare tramite Javascript
-    json = ""
-    return json
+    if request.method == "POST":
+        mossa = request.json
+    if classi.ActiveRooms.checkCode(codiceStanza):
+        p_room = classi.ActiveRooms.getRoom(codiceStanza)
+        p_room.setMove(mossa)
+    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
 
 # ---------FUNCIONS------------

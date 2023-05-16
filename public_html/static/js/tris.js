@@ -12,11 +12,90 @@ p_table[6] = document.querySelector(".SO");
 p_table[7] = document.querySelector(".S");
 p_table[8] = document.querySelector(".SE");
 
+room_code = document.getElementById("codiceStanza");
 p_par = document.querySelector("p");
 
 console.log({ p_table });
+console.log({ room_code });
 ///////////////////VARIABILI//////////////////
 const tris = ["", "", "", "", "", "", "", "", ""];
+let turn = ""; // può essere host o guest
+
+async function buildTable() {
+  table = await getMove(room_code.innerText);
+  tris[0] = table["NO"];
+  tris[1] = table["N"];
+  tris[2] = table["NE"];
+  tris[3] = table["O"];
+  tris[4] = table["C"];
+  tris[5] = table["E"];
+  tris[6] = table["SO"];
+  tris[7] = table["S"];
+  tris[8] = table["SE"];
+
+  turn = table["turn"];
+  printTable();
+}
+function printTable() {
+  p_table[0].textContent = tris[0];
+  p_table[1].textContent = tris[1];
+  p_table[2].textContent = tris[2];
+  p_table[3].textContent = tris[3];
+  p_table[4].textContent = tris[4];
+  p_table[5].textContent = tris[5];
+  p_table[6].textContent = tris[6];
+  p_table[7].textContent = tris[7];
+  p_table[8].textContent = tris[8];
+}
+
+const gameTris = (event) => {
+  //TODO:
+  //DA MODIFICARE: in modo che una vola che l'utente immette un input controlla che sia il suo turno
+  //e poi invii l'oggetto tris all' api
+
+  if (event.target.textContent === "") {
+    event.target.textContent = charPlayer;
+    event.target.style.color = "blue";
+    id = event.target.id;
+    tris[id] = charPlayer;
+    buildTable();
+    //TODO: ricontrollare parametri postMOve
+    //ricontrollare gameTris
+    //postMove(mossa, room_code.textContent, username.textContent);
+  }
+};
+
+///////////////////API//////////////////////
+
+async function postMove(mossa, codiceStanza, username) {
+  const url = `/mossa/${codiceStanza}/${username}`;
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(mossa),
+    headers: { "Content-Type": "application/json" },
+  });
+  return response;
+}
+
+async function getMove(codiceStanza) {
+  const url = `/tris/${codiceStanza}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(data);
+  }
+}
+
+///////////////////MAIN//////////////////////
+buildTable();
+console.log(room_code.innerText);
+///////////////////eventlistener/////////////
+document.addEventListener("click", gameTris);
+
+// codice vecchio
+/*
 const charPlayer = "O";
 const charBot = "X";
 ///////////////////FUNZIONI//////////////////
@@ -86,44 +165,21 @@ function checkWin() {
   }
 }
 
+
+
 const gameTris = (event) => {
   //TODO:
   //DA MODIFICARE: in modo che una vola che l'utente immette un input controlla che sia il suo turno
-  //e poi invii l'oggetto tris all api
+  //e poi invii l'oggetto tris all' api
 
   if (event.target.textContent === "") {
     event.target.textContent = charPlayer;
     event.target.style.color = "blue";
     id = event.target.id;
     tris[id] = charPlayer;
-    botRandom();
+    buildTable();
+    //botRandom();
     checkWin();
   }
 };
-///////////////////API//////////////////////
-
-async function postMove(mossa, codiceStanza, username) {
-  const url = `/mossa/${codiceStanza}/${username}`;
-  const response = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(mossa),
-    headers: { "Content-Type": "application/json" },
-  });
-  return response;
-}
-
-async function getMove(codiceStanza) {
-  const url = `/${codiceStanza}`;
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(data);
-  }
-}
-
-///////////////////MAIN//////////////////////
-
-///////////////////eventlistener/////////////
-document.addEventListener("click", gameTris);
+*/

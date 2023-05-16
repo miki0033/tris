@@ -3,6 +3,7 @@ import random
 from datetime import datetime, timedelta
 
 from tris_lib import trislib
+import uuid
 
 # -----GLOBALI------
 
@@ -30,7 +31,7 @@ class TrisRoom:
         "E": "",
         "SO": "",
         "S": "",
-        "SE": "",
+        "SE": "O",
     }
     # Metodi
 
@@ -47,9 +48,10 @@ class TrisRoom:
         # genera un codice tramite uuid
         flag = True  # true fin quando il codice non è valido
         while flag:
-            rnd = random.randrange(100000, 1000000)
+            room_id = str(uuid.uuid4().hex)[:6]
             # check sui dati in tabella activeRoom
-            flag = ActiveRooms.checkCode(rnd)
+            flag = ActiveRooms.checkCode(room_id)
+        return room_id
 
     def getRoomCode(self):
         return self.codiceStanza
@@ -63,6 +65,9 @@ class TrisRoom:
     def getMove(self):
         return self.mosse
 
+    def setMove(self, mossa):
+        self.mosse = mossa
+
     def timeout(self):
         # restituisce true se è passato il tempo di timeout
         if datetime.now() > self.timestamp + self.timeout_time:
@@ -75,8 +80,9 @@ class ActiveRooms:
     # active come campo statico in python in modo da poterlo modificare solo tramite metodi
     active = []  # array di oggetti TrisRoom
 
-    def getActiveRooms(self):
-        return self.active
+    @staticmethod
+    def getActiveRooms():
+        return ActiveRooms.active
 
     def pushRoom(pointer):
         ActiveRooms.active.append(pointer)
@@ -98,8 +104,9 @@ class ActiveRooms:
         # restituisce true se il codice è presente un tabella
         # false altrimenti
         result = False  # PROVVISORIO
-
-        for i in ActiveRooms.active:
-            if ActiveRooms.active[i].codiceStanza == code:
+        trislib.printTerminal(ActiveRooms.getActiveRooms())
+        for room in ActiveRooms.active:
+            trislib.printTerminal(room.codiceStanza)
+            if room.codiceStanza == code:
                 result = True
         return result
