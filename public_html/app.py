@@ -14,11 +14,35 @@ from flask import request
 from flask import session
 from flask import json
 
+# -----------import Database-----------
+from flask_mysqldb import MySQL
+import MySQLdb.cursors
+
+import pw
+import re  # lib per check sulle regex
+import sys  # serve per debug
+
+
+app = Flask(__name__)
+app.secret_key = pw.SECRET_KEY
+
+# DB config
+app.config["MYSQL_HOST"] = pw.DBHOST
+app.config["MYSQL_USER"] = pw.DBUSER
+app.config["MYSQL_PASSWORD"] = pw.DBPW
+app.config["MYSQL_DB"] = pw.DB
+
+mysql = MySQL(app)
+import db
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
 
 # -----------Flask code-----------
 app = Flask(__name__)
 # Chiave di salatura(non dovrebbe essere publica)
-app.secret_key = b"f6c23211b07568ace2707f28180429677fe1b34d6b1ba04a6114243781fbd4f2"
+app.secret_key = pw.SECRET_KEY
 
 
 # ROUTE
@@ -32,17 +56,81 @@ def home():
     return render_template("homepage.html")
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        session["username"] = request.form["username"]
-        return redirect(url_for("index"))
-    return render_template("login.html")
-
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    msg = ""
+    if (
+        request.method == "POST"
+        and "username" in request.form
+        and "password" in request.form
+        and "email" in request.form
+    ):
+        username = request.form["username"]
+        email = request.form["email"]
+        password = pw.pwEncode(password)
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM utenti WHERE email = % s", (email,))
+        account = cursor.fetchone()
+        if account:
+            msg = "Email already registered, plase Log in!"
+        elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            msg = "Invalid email address !"
+        elif not username or not password or not email:
+            msg = "Please fill out the form !"
+        else:
+            cursor.execute(
+                "INSERT INTO utenti VALUES (NULL, % s, % s, % s, % s, NULL, NULL)",
+                (username, email, password),
+            )
+            mysql.connection.commit()  # salva i dati nel database
+            msg = "You have successfully registered !"
+            return redirect(url_for("login"))
+    elif request.method == "POST":
+        msg = "Please fill out the form !"
+    return render_template("register.html", msg=msg)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    msg = ""
+    if (
+        request.method == "POST"
+        and "username" in request.form
+        and "password" in request.form
+    ):
+        username = request.form["username"]
+        password = request.form["password"]
+        password = pw.pwEncode(password)
+        # l' oggetto cursor ritorna le righe del database come dizionari
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        # execute esegue la query
+        cursor.execute(
+            "SELECT * FROM utenti WHERE username = % s AND password = % s",
+            (
+                username,
+                password,
+            ),
+        )
+        # fetchone() ritorna la prossima riga della tabella, se si è arrivati alla fine ritorna None
+        account = cursor.fetchone()
+        if account:
+            session["loggedin"] = True
+            session["id"] = account["id"]
+            session["username"] = account["username"]
+
+            msg = "Logged in successfully !"
+            return redirect(url_for("home"))
+        else:
+            msg = "Incorrect username or password!"
+    return render_template("login.html", msg=msg)
+
+
+@app.route("/logout")
+def logout():
+    session.pop("loggedin", None)
+    session.pop("id", None)
+    session.pop("username", None)
+    return redirect(url_for("login"))
 
 
 # API
