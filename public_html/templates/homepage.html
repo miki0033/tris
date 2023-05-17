@@ -1,34 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <link rel="stylesheet" href="{{url_for('static', filename='css/stile.css')}}">
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/stile.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/modal.css')}}"
+    />
 
-        <title>Tris Homepage</title>
-    </head>
+    <title>Tris Homepage</title>
+  </head>
 
-    <body>
+  <body>
+    <header>
+      <h1>Tris.org</h1>
+      <div id="user">
+        <button type="button">Login</button>
+        <button type="button">Register</button>
+      </div>
+    </header>
 
-        <header>
-            <h1>Tris.org</h1>
-            <div id="user">
-                <button type="button">Login</button>
-                <button type="button">Register</button>
-            </div>
-        </header>
-
-        <main>
-            <button type="button">Create Room</button>
-
-            <div>
-                <img src="{{url_for('static', filename='img/tris.gif')}}" alt="tris-gif">
-            </div>
-
-            <button type="button">Join Room</button>
-        </main>
-        
-    </body>
+    <main>
+      <div class="buttondiv">
+        <a href="/new_room"><button type="button">Create Room</button></a>
+      </div>
+      <div>
+        <img
+          src="{{url_for('static', filename='img/tris.gif')}}"
+          alt="tris-gif"
+        />
+      </div>
+      <div class="buttondiv">
+        <button type="button" id="modalBtn">Join Room</button>
+      </div>
+      <div class="modal" id="modal">
+        <div class="modal-content">
+          <form action="/join" method="post">
+            <input type="text" name="join" id="" />
+            <button type="submit">Join Room</button>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script src="{{url_for('static', filename='js/modal.js')}}"></script>
+  </body>
 </html>
