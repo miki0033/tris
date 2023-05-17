@@ -37,6 +37,7 @@ class TrisRoom:
     def __init__(self, host):
         self.host = host
         self.guest = ""
+        self.spettatori = []
         self.timestamp = datetime.now()
         self.timeout_time = timedelta(hours=1)
         self.codiceStanza = TrisRoom.createCode()
@@ -97,6 +98,7 @@ class TrisRoom:
             self.mosse["turn"] = "O"
         else:
             self.mosse["turn"] = "X"
+
         self.mosse["NO"] = mossa[0]
         self.mosse["N"] = mossa[1]
         self.mosse["NE"] = mossa[2]

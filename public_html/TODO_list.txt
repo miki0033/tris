@@ -1,0 +1,9 @@
+Cose da aggiungere:
+Login utente
+GRAFICA
+Aggiungere uno storico delle partite con json della partita finita
+Pagina per visualizzare lo stato della partita finita
+
+
+Cose da Fixare:
+Modalità spettatore

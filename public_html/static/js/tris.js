@@ -2,15 +2,15 @@
 ///////////////////SELETTORI/////////////////
 const p_table = [];
 const divTable = document.querySelector(".tristable");
-p_table[0] = document.querySelector(".NO");
-p_table[1] = document.querySelector(".N");
-p_table[2] = document.querySelector(".NE");
-p_table[3] = document.querySelector(".O");
-p_table[4] = document.querySelector(".C");
-p_table[5] = document.querySelector(".E");
-p_table[6] = document.querySelector(".SO");
-p_table[7] = document.querySelector(".S");
-p_table[8] = document.querySelector(".SE");
+p_table[0] = document.getElementById("0");
+p_table[1] = document.getElementById("1");
+p_table[2] = document.getElementById("2");
+p_table[3] = document.getElementById("3");
+p_table[4] = document.getElementById("4");
+p_table[5] = document.getElementById("5");
+p_table[6] = document.getElementById("6");
+p_table[7] = document.getElementById("7");
+p_table[8] = document.getElementById("8");
 
 const room_code = document.getElementById("codiceStanza").textContent;
 const username = document.getElementById("username").textContent;
@@ -30,6 +30,7 @@ if (avatar == "X") {
 } else if (avatar == "O") {
   opponent = "X";
 } //terzo caso avatar="" per gli spettatori
+else avatar = "void";
 
 async function buildTable() {
   let table = await getMove(room_code);
@@ -126,34 +127,7 @@ var intervalId = window.setInterval(function () {
 ///////////////////eventlistener/////////////
 document.addEventListener("click", gameTris);
 
-// codice vecchio
-/*
-const charPlayer = "O";
-const charBot = "X";
 ///////////////////FUNZIONI//////////////////
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-}
-//bot random
-function botRandom() {
-  marked = true;
-
-  if (tris.find((el) => el === "") === "") marked = false; //controllo se la tabella ha uno spazio vuoto, se si find restituisce "", e lo confronta nel if
-  console.log(marked);
-  while (!marked) {
-    choise = getRandomInt(0, 9);
-    console.log(choise);
-    if (tris[choise] === "") {
-      p_table[choise].textContent = charBot;
-      p_table[choise].style.color = "red";
-      tris[choise] = charBot;
-      marked = true;
-    }
-  }
-}
-*/
 function checkWin() {
   let char = avatar;
   let message = "Vittoria";
@@ -202,26 +176,9 @@ function checkWin() {
     end = true;
     message = "Sconfitta";
   }
+  console.log(end);
   if (end) {
     p_par.textContent = message;
     clearInterval(intervalId);
   }
 }
-
-/*
-const gameTris = (event) => {
-  //TODO:
-  //DA MODIFICARE: in modo che una vola che l'utente immette un input controlla che sia il suo turno
-  //e poi invii l'oggetto tris all' api
-
-  if (event.target.textContent === "") {
-    event.target.textContent = charPlayer;
-    event.target.style.color = "blue";
-    id = event.target.id;
-    tris[id] = charPlayer;
-    buildTable();
-    //botRandom();
-    checkWin();
-  }
-};
-*/
