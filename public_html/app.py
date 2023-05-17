@@ -67,7 +67,7 @@ def register():
     ):
         username = request.form["username"]
         email = request.form["email"]
-        password = pw.pwEncode(password)
+        password = pw.pwEncode(request.form["password"])
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("SELECT * FROM utenti WHERE email = % s", (email,))
         account = cursor.fetchone()
