@@ -159,7 +159,7 @@ def join():
     if classi.ActiveRooms.checkCode(codiceStanza):
         p_room = classi.ActiveRooms.getRoom(codiceStanza)
         p_room.joinRoom(username)  # controllo sul numero di utenti nella stanza
-        trislib.printTerminal(f"{p_room.host, p_room.guest}")
+
     return redirect(f"/{codiceStanza}/{username}")  # avatar="O"
 
 

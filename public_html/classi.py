@@ -16,8 +16,6 @@ class TrisRoom:
     codiceStanza = ""
     timestamp = 0
     timeout_time = 0
-    """
-    # giocatori = []
     host = ""
     guest = ""
     spettatori = []
@@ -33,14 +31,27 @@ class TrisRoom:
         "S": "",
         "SE": "",
     }
+    """
     # Metodi
 
     def __init__(self, host):
         self.host = host
+        self.guest = ""
         self.timestamp = datetime.now()
         self.timeout_time = timedelta(hours=1)
         self.codiceStanza = TrisRoom.createCode()
-
+        self.mosse = {
+            "turn": "X",
+            "NO": "",
+            "N": "",
+            "NE": "",
+            "O": "",
+            "C": "",
+            "E": "",
+            "SO": "",
+            "S": "",
+            "SE": "",
+        }
         ActiveRooms.pushRoom(self)
 
     @staticmethod
@@ -87,7 +98,8 @@ class TrisRoom:
         else:
             self.mosse["turn"] = "X"
         self.mosse["NO"] = mossa[0]
-        self.mosse["N"] = mossa[2]
+        self.mosse["N"] = mossa[1]
+        self.mosse["NE"] = mossa[2]
         self.mosse["O"] = mossa[3]
         self.mosse["C"] = mossa[4]
         self.mosse["E"] = mossa[5]
