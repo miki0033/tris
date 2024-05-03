@@ -1,3 +1,0 @@
-import classi
-import tris
-
