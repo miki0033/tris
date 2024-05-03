@@ -11,7 +11,8 @@ Benvenuto a Tris Online! Questo progetto ti permette di giocare al classico gioc
 
 ## Contributi
 
-Il progetto è nato come brief di gruppo al interno dell'istituto [https://www.infobasic.it/] (https://www.infobasic.it/)
+Il progetto è nato come brief di gruppo al interno dell'istituto [https://www.infobasic.it/]
+
 Authors: Claudia Piemontese, Cosimo Curlante, Danilo Marchesani, Michele Monteferrante
 
 ## Licenza
